@@ -150,13 +150,14 @@ class _DestinationSelectionScreenState
       options: MapOptions(
         initialCenter: _origin,
         initialZoom: 13.0,
+        backgroundColor: AppColors.lavenderLight,
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.pinchZoom | InteractiveFlag.drag,
         ),
       ),
       children: [
         TileLayer(
-          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.womi.app',
         ),
         if (_selected != null) _buildAnimatedRoute(),
@@ -172,34 +173,38 @@ class _DestinationSelectionScreenState
         final curvedPoints = _generateCurvedPoints(progress);
         return Stack(
           children: [
-            PolylineLayer(
-              polylines: [
-                Polyline(
-                  points: curvedPoints,
-                  strokeWidth: 4,
-                  color: AppColors.secondary.withValues(alpha: 0.7),
-                ),
-              ],
+            Positioned.fill(
+              child: PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: curvedPoints,
+                    strokeWidth: 4,
+                    color: AppColors.secondary.withValues(alpha: 0.7),
+                  ),
+                ],
+              ),
             ),
-            MarkerLayer(
-              markers: [
-                Marker(
-                  point: _origin,
-                  width: 40,
-                  height: 40,
-                  child: _buildMarkerPin(AppColors.success, 'Origen'),
-                ),
-                if (_selected != null)
+            Positioned.fill(
+              child: MarkerLayer(
+                markers: [
                   Marker(
-                    point: curvedPoints.last,
+                    point: _origin,
                     width: 40,
                     height: 40,
-                    child: _buildMarkerPin(
-                      AppColors.accent,
-                      _selected!.name,
-                    ),
+                    child: _buildMarkerPin(AppColors.success, 'Origen'),
                   ),
-              ],
+                  if (_selected != null)
+                    Marker(
+                      point: curvedPoints.last,
+                      width: 40,
+                      height: 40,
+                      child: _buildMarkerPin(
+                        AppColors.accent,
+                        _selected!.name,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ],
         );

@@ -172,13 +172,14 @@ class _ActiveRideScreenState extends State<ActiveRideScreen>
       options: MapOptions(
         initialCenter: _origin,
         initialZoom: 12.5,
+        backgroundColor: AppColors.lavenderLight,
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.none,
         ),
       ),
       children: [
         TileLayer(
-          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.womi.app',
         ),
         _buildStaticRoute(),
