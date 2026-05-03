@@ -20,7 +20,7 @@ class BalanceCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.secondary, Color(0xFF3D5BC4)],
+          colors: [AppColors.secondary, AppColors.secondaryDark],
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusL),
         boxShadow: [

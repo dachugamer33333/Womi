@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/theme.dart';
@@ -66,12 +67,17 @@ class ProfileScreen extends StatelessWidget {
               CircleAvatar(
                 radius: AppDimensions.profilePicSize / 2,
                 backgroundColor: AppColors.lavenderLight,
-                child: Text(
-                  _getInitials(fullName),
-                  style: AppTextStyles.displaySmall.copyWith(
-                    color: AppColors.secondary,
-                  ),
-                ),
+                backgroundImage: (user?.photoPath != null)
+                    ? FileImage(File(user!.photoPath!))
+                    : null,
+                child: (user?.photoPath == null)
+                    ? Text(
+                        _getInitials(fullName),
+                        style: AppTextStyles.displaySmall.copyWith(
+                          color: AppColors.secondary,
+                        ),
+                      )
+                    : null,
               ),
               SizedBox(height: AppDimensions.spaceM),
               WomiGradientText(

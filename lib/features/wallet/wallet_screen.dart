@@ -21,33 +21,24 @@ class WalletScreen extends StatelessWidget {
           style: AppTextStyles.displayMedium,
         ),
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(AppDimensions.spaceM),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 800),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildPromoBanner(),
-                    SizedBox(height: AppDimensions.spaceL),
-                    if (constraints.maxWidth > 600)
-                      _buildWideCards()
-                    else
-                      _buildNarrowCards(),
-                    SizedBox(height: AppDimensions.spaceXL),
-                    _buildServicesSection(),
-                    SizedBox(height: AppDimensions.spaceXL),
-                    _buildAddPaymentButton(context),
-                    SizedBox(height: AppDimensions.spaceL),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(AppDimensions.spaceM),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildPromoBanner(),
+              SizedBox(height: AppDimensions.spaceL),
+              _buildNarrowCards(),
+              SizedBox(height: AppDimensions.spaceXL),
+              _buildServicesSection(),
+              SizedBox(height: AppDimensions.spaceXL),
+              _buildAddPaymentButton(context),
+              SizedBox(height: AppDimensions.spaceL),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -94,16 +85,6 @@ class WalletScreen extends StatelessWidget {
         _buildBalanceCard(),
         SizedBox(height: AppDimensions.spaceM),
         _buildCardCard(),
-      ],
-    );
-  }
-
-  Widget _buildWideCards() {
-    return Row(
-      children: [
-        Expanded(child: _buildBalanceCard()),
-        SizedBox(width: AppDimensions.spaceM),
-        Expanded(child: _buildCardCard()),
       ],
     );
   }

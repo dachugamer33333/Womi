@@ -32,5 +32,11 @@ class AppTheme {
           elevation: 0,
           centerTitle: true,
         ),
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {
+            for (final platform in TargetPlatform.values)
+              platform: const FadeUpwardsPageTransitionsBuilder(),
+          },
+        ),
       );
 }

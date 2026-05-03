@@ -17,4 +17,8 @@ class AppColors {
 
   static const Color scaffoldBackground = Color(0xFFF5F3FF);
   static const Color lavenderLight = Color(0xFFF0EBFF);
+
+  // Dark variants for gradient endpoints
+  static const Color secondaryDark = Color(0xFF3D5BC4);
+  static const Color accentDark = Color(0xFFA82E78);
 }

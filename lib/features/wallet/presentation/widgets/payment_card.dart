@@ -76,7 +76,7 @@ class PaymentCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.accent, Color(0xFFA82E78)],
+          colors: [AppColors.accent, AppColors.accentDark],
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
         boxShadow: [

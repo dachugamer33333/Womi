@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/theme.dart';
@@ -75,12 +76,17 @@ class HomeScreen extends StatelessWidget {
           child: CircleAvatar(
             radius: 24,
             backgroundColor: AppColors.lavenderLight,
-            child: Text(
-              _getInitials(auth.currentUser?.fullName ?? ''),
-              style: AppTextStyles.titleSmall.copyWith(
-                color: AppColors.secondary,
-              ),
-            ),
+            backgroundImage: (auth.currentUser?.photoPath != null)
+                ? FileImage(File(auth.currentUser!.photoPath!))
+                : null,
+            child: (auth.currentUser?.photoPath == null)
+                ? Text(
+                    _getInitials(auth.currentUser?.fullName ?? ''),
+                    style: AppTextStyles.titleSmall.copyWith(
+                      color: AppColors.secondary,
+                    ),
+                  )
+                : null,
           ),
         ),
       ],
