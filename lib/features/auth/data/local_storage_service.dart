@@ -1,10 +1,9 @@
-// Almacenamiento local con Hive elegido por:
-// - Simplicidad: no requiere SQL, se accede por clave-valor en cajas tipadas.
-// - Velocidad: Hive es más rápido que SQLite para operaciones simples de lectura/escritura.
-// - Cero boilerplate: no necesita migraciones ni esquemas SQL.
-// - Perfecto para esta escala de datos (pocos usuarios locales, sin backend).
+// Hive elegido por simplicidad, velocidad y cero boilerplate SQL.
+// NOTA: Hive devuelve Map<dynamic, dynamic> que NO es subtipo de Map<String, dynamic>.
+// JsonUtils.safeMap() hace la conversión recursiva necesaria.
 
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../../core/utils/json_utils.dart';
 import '../domain/models/user_model.dart';
 
 class LocalStorageService {
@@ -56,13 +55,13 @@ class LocalStorageService {
   UserModel? getUser(String id) {
     final data = _users.get(id);
     if (data == null) return null;
-    return UserModel.fromJson(Map<String, dynamic>.from(data));
+    return UserModel.fromJson(JsonUtils.safeMap(data));
   }
 
   UserModel? getUserByEmail(String email) {
     final users = _users.values;
     for (final data in users) {
-      final map = Map<String, dynamic>.from(data);
+      final map = JsonUtils.safeMap(data);
       if (map['email'] == email) {
         return UserModel.fromJson(map);
       }
@@ -83,7 +82,7 @@ class LocalStorageService {
   List<Map<String, dynamic>> getActivities() {
     final raw = _session.get(_activitiesKey);
     if (raw == null) return [];
-    return List<Map<String, dynamic>>.from(raw as List);
+    return JsonUtils.safeListOfMaps(raw);
   }
 
   Future<void> saveActivities(List<Map<String, dynamic>> activities) async {
@@ -95,7 +94,7 @@ class LocalStorageService {
   List<Map<String, dynamic>> getPaymentMethods() {
     final raw = _session.get(_paymentMethodsKey);
     if (raw == null) return [];
-    return List<Map<String, dynamic>>.from(raw as List);
+    return JsonUtils.safeListOfMaps(raw);
   }
 
   Future<void> savePaymentMethods(
@@ -108,7 +107,7 @@ class LocalStorageService {
   List<Map<String, dynamic>> getRecentDestinations() {
     final raw = _session.get(_recentDestinationsKey);
     if (raw == null) return [];
-    return List<Map<String, dynamic>>.from(raw as List);
+    return JsonUtils.safeListOfMaps(raw);
   }
 
   Future<void> saveRecentDestinations(
