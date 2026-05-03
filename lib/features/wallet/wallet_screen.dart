@@ -298,18 +298,14 @@ class WalletScreen extends StatelessWidget {
 
   void _showAddPaymentDialog(BuildContext context) {
     final last4Ctrl = TextEditingController();
-    final providerCtrl = TextEditingController();
+    String provider = 'Visa';
+    final screenContext = context;
     showDialog(
       context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-          ),
-          title: Text(
-            'Agregar tarjeta',
-            style: AppTextStyles.headline,
-          ),
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setDialogState) => WomiDialog(
+          icon: Icons.credit_card_rounded,
+          title: 'Agregar método de pago',
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -317,60 +313,87 @@ class WalletScreen extends StatelessWidget {
                 controller: last4Ctrl,
                 keyboardType: TextInputType.number,
                 maxLength: 4,
-                decoration: const InputDecoration(
+                style: AppTextStyles.bodyMedium,
+                decoration: InputDecoration(
                   labelText: 'Últimos 4 dígitos',
+                  labelStyle: AppTextStyles.bodySmall,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+                    borderSide:
+                        const BorderSide(color: AppColors.secondary, width: 2),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: AppDimensions.spaceM,
+                    vertical: AppDimensions.spaceS,
+                  ),
                 ),
               ),
-              SizedBox(height: AppDimensions.spaceS),
-              TextField(
-                controller: providerCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Proveedor (Visa, Mastercard...)',
+              SizedBox(height: AppDimensions.spaceM),
+              DropdownButtonFormField<String>(
+                initialValue: provider,
+                style: AppTextStyles.bodyMedium,
+                decoration: InputDecoration(
+                  labelText: 'Proveedor',
+                  labelStyle: AppTextStyles.bodySmall,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+                    borderSide:
+                        const BorderSide(color: AppColors.secondary, width: 2),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: AppDimensions.spaceM,
+                    vertical: AppDimensions.spaceS,
+                  ),
                 ),
+                items: const [
+                  DropdownMenuItem(value: 'Visa', child: Text('Visa')),
+                  DropdownMenuItem(value: 'Mastercard', child: Text('Mastercard')),
+                  DropdownMenuItem(value: 'AMEX', child: Text('AMEX')),
+                ],
+                onChanged: (v) => setDialogState(() => provider = v!),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text(
-                'Cancelar',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textBody,
-                ),
-              ),
+              child: Text('Cancelar',
+                  style:
+                      AppTextStyles.bodyMedium.copyWith(color: AppColors.textBody)),
             ),
             WomiGradientButton(
               label: 'Guardar',
               onPressed: () {
-                if (last4Ctrl.text.length == 4 && providerCtrl.text.isNotEmpty) {
-                  final auth = context.read<AuthProvider>();
+                if (last4Ctrl.text.length == 4) {
+                  final auth = screenContext.read<AuthProvider>();
                   final methods = auth.repository.getPaymentMethods();
                   methods.add({
                     'last4': last4Ctrl.text,
-                    'provider': providerCtrl.text,
+                    'provider': provider,
                   });
                   auth.repository.savePaymentMethods(methods);
                   final user = auth.currentUser;
                   if (user != null) {
-                    auth.updateUser(user.copyWith(
-                      cardsCount: methods.length,
-                    ));
+                    auth.updateUser(user.copyWith(cardsCount: methods.length));
                   }
                   Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  ScaffoldMessenger.of(screenContext).showSnackBar(
                     SnackBar(
                       content: Text(
                         'Tarjeta agregada',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.surface,
-                        ),
+                        style: AppTextStyles.bodyMedium
+                            .copyWith(color: AppColors.surface),
                       ),
                       backgroundColor: AppColors.secondary,
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(AppDimensions.radiusS),
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusS),
                       ),
                     ),
                   );
@@ -378,8 +401,8 @@ class WalletScreen extends StatelessWidget {
               },
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }

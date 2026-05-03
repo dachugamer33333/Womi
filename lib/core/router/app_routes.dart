@@ -12,4 +12,8 @@ class AppRoutes {
   static const String searchingDriver = '/searching-driver';
   static const String activeRide = '/active-ride';
   static const String rideCompleted = '/ride-completed';
+  static const String orders = '/orders';
+  static const String help = '/help';
+  static const String securitySettings = '/security-settings';
+  static const String settings = '/settings';
 }

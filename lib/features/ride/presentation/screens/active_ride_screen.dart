@@ -89,34 +89,25 @@ class _ActiveRideScreenState extends State<ActiveRideScreen>
   void _showSosDialog() {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.error,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-        ),
-        title: Row(
-          children: [
-            Icon(Icons.warning_rounded,
-                color: AppColors.surface, size: AppDimensions.iconL),
-            SizedBox(width: AppDimensions.spaceS),
-            Text('¿Activar emergencia?',
-                style: AppTextStyles.headline.copyWith(color: AppColors.surface)),
-          ],
-        ),
+      builder: (_) => WomiDialog(
+        icon: Icons.warning_rounded,
+        title: '¿Activar emergencia?',
         content: Text(
           'Se notificará a tus contactos de confianza y al equipo de Womi.',
-          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.surface),
+          style: AppTextStyles.bodyMedium,
+          textAlign: TextAlign.center,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(ctx),
+            onPressed: () => Navigator.pop(context),
             child: Text('Cancelar',
-                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.surface)),
+                style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textBody)),
           ),
           WomiGradientButton(
             label: 'Confirmar SOS',
             onPressed: () {
-              Navigator.pop(ctx);
+              Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(

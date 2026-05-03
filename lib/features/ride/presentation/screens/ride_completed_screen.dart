@@ -4,6 +4,7 @@ import '../../../../core/theme/theme.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../providers/ride_provider.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 
 class RideCompletedScreen extends StatefulWidget {
   const RideCompletedScreen({super.key});
@@ -216,7 +217,22 @@ class _RideCompletedScreenState extends State<RideCompletedScreen>
         label: 'Volver al inicio',
         icon: Icons.home_rounded,
         onPressed: () {
+          final ride = context.read<RideProvider>().currentRide;
           context.read<RideProvider>().completeRide();
+          if (ride != null) {
+            final auth = context.read<AuthProvider>();
+            final destinations = auth.repository.getRecentDestinations();
+            final destEntry = {
+              'name': ride.destination.name,
+              'address': ride.destination.address,
+            };
+            final exists = destinations.any((d) => d['name'] == destEntry['name']);
+            if (!exists) {
+              destinations.insert(0, destEntry);
+              if (destinations.length > 5) destinations.removeLast();
+              auth.repository.saveRecentDestinations(destinations);
+            }
+          }
           Navigator.pushNamedAndRemoveUntil(
             context,
             AppRoutes.home,

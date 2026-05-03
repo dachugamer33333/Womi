@@ -158,46 +158,38 @@ class ProfileScreen extends StatelessWidget {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-          ),
-          title: Text(
-            'Cerrar sesión',
-            style: AppTextStyles.headline,
-          ),
-          content: Text(
-            '¿Estás segura de que quieres cerrar sesión?',
-            style: AppTextStyles.bodyMedium,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(
-                'Cancelar',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textBody,
-                ),
+      builder: (_) => WomiDialog(
+        title: 'Cerrar sesión',
+        content: Text(
+          '¿Estás segura de que quieres cerrar sesión?',
+          style: AppTextStyles.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancelar',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textBody,
               ),
             ),
-            WomiGradientButton(
-              label: 'Cerrar sesión',
-              onPressed: () async {
-                Navigator.pop(ctx);
-                await context.read<AuthProvider>().logout();
-                if (context.mounted) {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    AppRoutes.login,
-                    (_) => false,
-                  );
-                }
-              },
-            ),
-          ],
-        );
-      },
+          ),
+          WomiGradientButton(
+            label: 'Cerrar sesión',
+            onPressed: () async {
+              Navigator.pop(context);
+              await context.read<AuthProvider>().logout();
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.login,
+                  (_) => false,
+                );
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -256,10 +248,10 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildGridMenu() {
     final items = [
-      _MenuItem(AppStrings.orders, Icons.shopping_bag_rounded),
-      _MenuItem(AppStrings.help, Icons.help_outline_rounded),
-      _MenuItem(AppStrings.security, Icons.shield_rounded),
-      _MenuItem(AppStrings.settings, Icons.settings_rounded),
+      _MenuItem(AppStrings.orders, Icons.shopping_bag_rounded, AppRoutes.orders),
+      _MenuItem(AppStrings.help, Icons.help_outline_rounded, AppRoutes.help),
+      _MenuItem(AppStrings.security, Icons.shield_rounded, AppRoutes.securitySettings),
+      _MenuItem(AppStrings.settings, Icons.settings_rounded, AppRoutes.settings),
     ];
 
     return GridView.builder(
@@ -276,7 +268,7 @@ class ProfileScreen extends StatelessWidget {
         final item = items[index];
         final isSecurity = item.label == AppStrings.security;
         return WomiCard(
-          onTap: () {},
+          onTap: () => Navigator.pushNamed(context, item.route),
           shadows: AppShadows.soft,
           padding: EdgeInsets.symmetric(
             vertical: AppDimensions.spaceM,
@@ -324,6 +316,7 @@ class ProfileScreen extends StatelessWidget {
 class _MenuItem {
   final String label;
   final IconData icon;
+  final String route;
 
-  const _MenuItem(this.label, this.icon);
+  const _MenuItem(this.label, this.icon, this.route);
 }

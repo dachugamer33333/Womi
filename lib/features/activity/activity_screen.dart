@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/theme.dart';
@@ -64,19 +63,6 @@ class ActivityScreen extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: kDebugMode
-          ? FloatingActionButton.extended(
-              onPressed: () => _addTestActivity(context),
-              backgroundColor: AppColors.secondary,
-              icon: const Icon(Icons.add_rounded, color: Colors.white),
-              label: Text(
-                'Agregar actividad',
-                style: AppTextStyles.labelSmall.copyWith(
-                  color: AppColors.surface,
-                ),
-              ),
-            )
-          : null,
     );
   }
 
@@ -109,6 +95,7 @@ class ActivityScreen extends StatelessWidget {
   }
 
   Widget _buildActivityCard(Map<String, dynamic> activity) {
+    final dateStr = _relativeDate(activity['date'] as String?);
     return Padding(
       padding: EdgeInsets.only(bottom: AppDimensions.spaceM),
       child: WomiCard(
@@ -121,13 +108,8 @@ class ActivityScreen extends StatelessWidget {
                 color: AppColors.lavenderLight,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusS),
               ),
-              child: Icon(
-                activity['type'] == 'comida'
-                    ? Icons.restaurant_rounded
-                    : Icons.local_taxi_rounded,
-                color: AppColors.secondary,
-                size: AppDimensions.iconL,
-              ),
+              child: Icon(Icons.local_taxi_rounded,
+                  color: AppColors.secondary, size: AppDimensions.iconL),
             ),
             SizedBox(width: AppDimensions.spaceM),
             Expanded(
@@ -140,7 +122,7 @@ class ActivityScreen extends StatelessWidget {
                   ),
                   SizedBox(height: AppDimensions.spaceXS),
                   Text(
-                    '${activity['date']} · ${activity['amount']}',
+                    '$dateStr · ${activity['amount']}',
                     style: AppTextStyles.labelSmall,
                   ),
                 ],
@@ -162,23 +144,19 @@ class ActivityScreen extends StatelessWidget {
     );
   }
 
-  void _addTestActivity(BuildContext context) {
-    final auth = context.read<AuthProvider>();
-    final activities = auth.repository.getActivities();
-    activities.insert(0, {
-      'id': DateTime.now().millisecondsSinceEpoch.toString(),
-      'name': 'Viaje a Zona Rosa',
-      'type': 'transporte',
-      'date': 'Hoy',
-      'amount': '\$120.00 MXN',
-      'description': 'Viaje seguro con conductora verificada',
-    });
-    auth.repository.saveActivities(activities);
-    if (auth.currentUser != null) {
-      auth.updateUser(auth.currentUser!.copyWith(
-        walletBalance: auth.currentUser!.walletBalance + 500.0,
-        couponsCount: auth.currentUser!.couponsCount + 1,
-      ));
+  String _relativeDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return '';
+    if (dateStr == 'Hoy') return 'Hoy';
+    try {
+      final date = DateTime.parse(dateStr);
+      final now = DateTime.now();
+      final diff = now.difference(date);
+      if (diff.inDays == 0) return 'Hoy';
+      if (diff.inDays == 1) return 'Ayer';
+      if (diff.inDays < 7) return 'Hace ${diff.inDays} días';
+      return 'Hace ${diff.inDays} días';
+    } catch (_) {
+      return dateStr;
     }
   }
 }

@@ -13,6 +13,10 @@ import 'features/home/home_screen.dart';
 import 'features/activity/activity_screen.dart';
 import 'features/wallet/wallet_screen.dart';
 import 'features/profile/profile_screen.dart';
+import 'features/profile/orders_screen.dart';
+import 'features/profile/help_screen.dart';
+import 'features/profile/security_screen.dart';
+import 'features/profile/settings_screen.dart';
 import 'features/ride/presentation/providers/ride_provider.dart';
 import 'features/ride/presentation/screens/destination_selection_screen.dart';
 import 'features/ride/presentation/screens/searching_driver_screen.dart';
@@ -64,6 +68,10 @@ class WomiApp extends StatelessWidget {
           AppRoutes.searchingDriver: (_) => const SearchingDriverScreen(),
           AppRoutes.activeRide: (_) => const ActiveRideScreen(),
           AppRoutes.rideCompleted: (_) => const RideCompletedScreen(),
+          AppRoutes.orders: (_) => const OrdersScreen(),
+          AppRoutes.help: (_) => const HelpScreen(),
+          AppRoutes.securitySettings: (_) => const SecurityScreen(),
+          AppRoutes.settings: (_) => const SettingsScreen(),
         },
       ),
     );
