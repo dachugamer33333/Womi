@@ -134,9 +134,12 @@ lib/
 - ✅ Pantalla Activity dinámica: lista de actividades del repo, botón debug (kDebugMode)
 - ✅ Pantalla Wallet dinámica: saldo real, métodos de pago del repo, diálogo agregar tarjeta
 - ✅ Pantalla Profile dinámica: nombre con gradiente, badge de verificación condicional, contadores reales
-- ✅ Flujo de logout: botón "Cerrar sesión" al final del Perfil → diálogo confirmación → `pushNamedAndRemoveUntil`
+- ✅ Grid del Perfil funcional: OrdersScreen, HelpScreen, SecurityScreen, SettingsScreen con logout integrado
+- ✅ Flujo de logout: botón "Cerrar sesión" al final del Perfil y en Ajustes → diálogo confirmación → `pushNamedAndRemoveUntil`
 - ✅ Flujo de viaje demo: DestinationSelectionScreen → SearchingDriverScreen → ActiveRideScreen → RideCompletedScreen → Home
-- ✅ ActiveRideScreen con mapa flutter_map, auto animado en polyline curva, ETA countdown, tarjeta de conductora, SOS pulsante
+- ✅ ActiveRideScreen con mapa flutter_map, auto animado en polyline curva, ETA countdown, tarjeta de conductora, SOS pulsante, botón centrar ruta
+- ✅ RideCompletedScreen: guarda actividad en Hive, actualiza destinos recientes en Home
+- ✅ WomiDialog widget reutilizable: reemplaza todos los AlertDialog nativos
 - ✅ SearchingDriverScreen con anillos pulsantes animados y auto-transición a 3.5s
 - ✅ RideCompletedScreen con resumen, estrellas de rating tappables, botón volver a Home
 - ⬜ Pantalla de viaje activo real con GPS (no simulado)
