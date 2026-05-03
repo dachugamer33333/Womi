@@ -23,11 +23,9 @@ class WalletScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(AppDimensions.spaceM),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
               _buildPromoBanner(),
               SizedBox(height: AppDimensions.spaceL),
               _buildNarrowCards(),
@@ -35,9 +33,8 @@ class WalletScreen extends StatelessWidget {
               _buildServicesSection(),
               SizedBox(height: AppDimensions.spaceXL),
               _buildAddPaymentButton(context),
-              SizedBox(height: AppDimensions.spaceL),
-            ],
-          ),
+            SizedBox(height: AppDimensions.spaceL),
+          ],
         ),
       ),
     );
