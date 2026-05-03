@@ -1,10 +1,53 @@
 # Progreso Womi
 
-## Última sesión: 2026-05-02
+## Última sesión: 2026-05-02 (fase ride)
 
 ### Lo que se hizo
+**Flujo de viaje demo-ready:**
+- DestinationSelectionScreen: mapa flutter_map + OpenStreetMap, 5 destinos CDMX hardcodeados, card animada, polyline curva animada, cálculo de distancia/precio (Haversine estático), BottomSheet con resumen y botón "Buscar conductora".
+- SearchingDriverScreen: fondo `AppGradients.brand`, 3 anillos pulsantes animados con delays escalonados, avatar circular con iniciales, animación de puntos suspensivos, auto-transición a 3.5s con `pushReplacementNamed`.
+- ActiveRideScreen: mapa no interactivo con polyline curva y 30 waypoints, marcadores de origen/destino, auto animado interpolando sobre la ruta (50s), ETA countdown dinámico con `WomiGradientText`, BottomSheet fijo con tarjeta de conductora "Ana Martínez" (foto, rating 4.9, auto, badge verificación), sección seguridad (Compartir, Contactos, botón SOS pulsante), diálogo SOS emergencia, botón "Finalizar viaje" outline magenta.
+- RideCompletedScreen: fondo lavanda, check animado con gradiente, resumen del viaje (Zócalo → Antara, 14 min, $65 MXN, 6.2 km), 5 estrellas de rating tappables (default 5), botón "Volver al inicio" que guarda actividad en Hive y navega a Home.
+- Modelos: DestinationModel (5 destinos CDMX con coordenadas reales), DriverModel (Ana Martínez con datos creíbles), RideModel (cálculo de distancia Haversine, tarifa $25 base + $8/km).
+- RideRepository + RideProvider: selección de destino, creación de viaje, guardado de actividad completada en Hive.
+- Conexión: barra de búsqueda del Home → DestinationSelectionScreen. Flujo completo cierra el ciclo: Home → Destination → Searching → Active → Completed → Home (con nueva actividad visible en ActivityScreen).
 
-**Fase 1 — Sistema de diseño y UI estética:**
+### Decisiones técnicas tomadas
+| Decisión | Justificación |
+|---|---|
+| flutter_map sobre google_maps_flutter | No requiere API key, mapa estático decorativo suficiente para demo. |
+| OpenStreetMap tiles | Gratuito, sin límites de uso. Ideal para demo sin costo. |
+| Animación auto en 50s | Suficiente para moverse durante toda la explicación de la demo sin llegar al destino instantáneamente. |
+| 30 waypoints en polyline curva | Ruta realista con curva sinoidal, no línea recta. |
+| SOS pulsante con AnimationController | Efecto sutil pero notorio (escala 1.0→1.05 loop). |
+| Iniciales "MG" en avatar | Representa a "María García", consistente con los datos demo del Home. |
+| Tarifa $25 + $8/km | Precios creíbles para CDMX (viaje ~$65 MXN para 5km). |
+
+### Archivos clave creados/modificados en esta sesión
+**Creados (14 archivos):**
+- `lib/features/ride/domain/models/destination_model.dart` — 5 destinos CDMX + origen simulado
+- `lib/features/ride/domain/models/driver_model.dart` — datos de Ana Martínez
+- `lib/features/ride/domain/models/ride_model.dart` — modelo + cálculos (Haversine, tarifa)
+- `lib/features/ride/data/ride_repository.dart` — lógica de viaje + guardado en Hive
+- `lib/features/ride/presentation/providers/ride_provider.dart` — estado del viaje
+- `lib/features/ride/presentation/screens/destination_selection_screen.dart` — selección destino
+- `lib/features/ride/presentation/screens/searching_driver_screen.dart` — búsqueda animada
+- `lib/features/ride/presentation/screens/active_ride_screen.dart` — viaje activo (pantalla estrella)
+- `lib/features/ride/presentation/screens/ride_completed_screen.dart` — cierre con rating
+
+**Modificados:**
+- `pubspec.yaml` — `flutter_map: ^7.0.2`, `latlong2: ^0.9.1`
+- `lib/core/router/app_routes.dart` — 4 rutas nuevas (destinationSelection, searchingDriver, activeRide, rideCompleted)
+- `lib/main.dart` — +RideProvider en MultiProvider, +4 rutas, +imports
+- `lib/features/home/home_screen.dart` — barra de búsqueda navega a DestinationSelectionScreen
+- `AGENTS.md` — estado actual y estructura actualizados
+- `PROGRESS.md` — archivo actualizado
+
+
+
+## Historial de sesiones anteriores
+
+### 2026-05-02 (fase auth/UI) — Sesión inicial: UI completa + auth local + datos dinámicos
 - Creación del sistema de diseño completo (`lib/core/theme/`): `AppColors`, `AppGradients`, `AppDimensions`, `AppTextStyles`, `AppShadows`, `AppDurations`, `AppTheme` + barrel export.
 - Widgets compartidos (`lib/shared/widgets/`): `WomiCard`, `WomiGradientButton`, `WomiGradientText`, `WomiBottomNav`.
 - 4 pantallas estéticas: Home (Explorar), Activity, Wallet (Mi Monedero), Profile.
@@ -125,8 +168,3 @@
 - ¿Pagos reales? MercadoPago es más relevante en México que Stripe.
 - ¿Notificaciones push? Firebase Cloud Messaging es el estándar para Flutter.
 - ¿Verificación de identidad real? ¿API de INE/OCR o validación manual humana? El modelo actual asume validación humana.
-
-## Historial de sesiones anteriores
-
-### 2026-05-02 — Sesión inicial: UI completa + auth local + datos dinámicos
-Se construyó el proyecto desde cero: sistema de diseño Womi, 4 pantallas estéticas con bottom nav, sistema de auth local con Hive (registro/login/logout), y conexión de todas las pantallas a datos dinámicos del `AuthProvider`. Se corrigieron problemas de identidad visual (degradados, colores, sombras). Se crearon `AGENTS.md` y `PROGRESS.md` para memoria entre sesiones.

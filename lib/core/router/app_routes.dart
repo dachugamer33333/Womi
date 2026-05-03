@@ -8,4 +8,8 @@ class AppRoutes {
   static const String activity = '/activity';
   static const String wallet = '/wallet';
   static const String profile = '/profile';
+  static const String destinationSelection = '/destination-selection';
+  static const String searchingDriver = '/searching-driver';
+  static const String activeRide = '/active-ride';
+  static const String rideCompleted = '/ride-completed';
 }

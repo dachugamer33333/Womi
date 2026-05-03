@@ -44,6 +44,9 @@ dependencies:
   provider: ^6.1.2
   # Formatters
   intl: ^0.20.2
+  # Maps (simulated, no GPS required)
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

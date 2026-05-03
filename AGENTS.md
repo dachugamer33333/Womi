@@ -94,6 +94,22 @@ lib/
 │   │   └── home_screen.dart
 │   ├── profile/
 │   │   └── profile_screen.dart
+│   ├── ride/
+│   │   ├── data/
+│   │   │   └── ride_repository.dart
+│   │   ├── domain/
+│   │   │   └── models/
+│   │   │       ├── destination_model.dart
+│   │   │       ├── driver_model.dart
+│   │   │       └── ride_model.dart
+│   │   └── presentation/
+│   │       ├── providers/
+│   │       │   └── ride_provider.dart
+│   │       └── screens/
+│   │           ├── destination_selection_screen.dart
+│   │           ├── searching_driver_screen.dart
+│   │           ├── active_ride_screen.dart
+│   │           └── ride_completed_screen.dart
 │   └── wallet/
 │       └── wallet_screen.dart
 └── shared/
@@ -109,7 +125,7 @@ lib/
 - ✅ Sistema de diseño: `AppColors`, `AppGradients`, `AppDimensions`, `AppTextStyles`, `AppShadows`, `AppDurations`, `AppTheme`
 - ✅ Widgets compartidos: `WomiCard`, `WomiGradientButton`, `WomiGradientText`, `WomiBottomNav`
 - ✅ Bottom navigation con círculo degradado `AppGradients.brand` en estado activo
-- ✅ Rutas centralizadas: `AppRoutes` (splash, login, register, home, activity, wallet, profile)
+- ✅ Rutas centralizadas: `AppRoutes` (splash, login, register, home, activity, wallet, profile, destinationSelection, searchingDriver, activeRide, rideCompleted)
 - ✅ Sistema de auth local: `AuthRepository` con Hive, `AuthProvider` con ChangeNotifier
 - ✅ Modelo `UserModel` con `copyWith`, `toJson`, `fromJson`, hashing sha256
 - ✅ Validadores reutilizables: email, password, phoneMX, required, matchPassword
@@ -119,7 +135,11 @@ lib/
 - ✅ Pantalla Wallet dinámica: saldo real, métodos de pago del repo, diálogo agregar tarjeta
 - ✅ Pantalla Profile dinámica: nombre con gradiente, badge de verificación condicional, contadores reales
 - ✅ Flujo de logout: botón "Cerrar sesión" al final del Perfil → diálogo confirmación → `pushNamedAndRemoveUntil`
-- 🚧 Navegación avatar Home → Perfil: usa `pushNamed` (no cambia el tab en AppShell)
+- ✅ Flujo de viaje demo: DestinationSelectionScreen → SearchingDriverScreen → ActiveRideScreen → RideCompletedScreen → Home
+- ✅ ActiveRideScreen con mapa flutter_map, auto animado en polyline curva, ETA countdown, tarjeta de conductora, SOS pulsante
+- ✅ SearchingDriverScreen con anillos pulsantes animados y auto-transición a 3.5s
+- ✅ RideCompletedScreen con resumen, estrellas de rating tappables, botón volver a Home
+- ⬜ Pantalla de viaje activo real con GPS (no simulado)
 - ⬜ Pantalla de viaje activo + botón SOS
 - ⬜ Onboarding de verificación 24h (subida de selfie + INE)
 - ⬜ Vista de conductora (versión espejo)

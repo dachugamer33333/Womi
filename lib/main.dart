@@ -13,6 +13,11 @@ import 'features/home/home_screen.dart';
 import 'features/activity/activity_screen.dart';
 import 'features/wallet/wallet_screen.dart';
 import 'features/profile/profile_screen.dart';
+import 'features/ride/presentation/providers/ride_provider.dart';
+import 'features/ride/presentation/screens/destination_selection_screen.dart';
+import 'features/ride/presentation/screens/searching_driver_screen.dart';
+import 'features/ride/presentation/screens/active_ride_screen.dart';
+import 'features/ride/presentation/screens/ride_completed_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +42,9 @@ class WomiApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => AuthProvider(authRepo),
         ),
+        ChangeNotifierProvider(
+          create: (_) => RideProvider(authRepo),
+        ),
       ],
       child: MaterialApp(
         title: 'Womi',
@@ -51,6 +59,11 @@ class WomiApp extends StatelessWidget {
           AppRoutes.activity: (_) => const ActivityScreen(),
           AppRoutes.wallet: (_) => const WalletScreen(),
           AppRoutes.profile: (_) => const ProfileScreen(),
+          AppRoutes.destinationSelection: (_) =>
+              const DestinationSelectionScreen(),
+          AppRoutes.searchingDriver: (_) => const SearchingDriverScreen(),
+          AppRoutes.activeRide: (_) => const ActiveRideScreen(),
+          AppRoutes.rideCompleted: (_) => const RideCompletedScreen(),
         },
       ),
     );

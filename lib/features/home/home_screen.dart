@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: AppDimensions.spaceL),
                     _buildBannerCarousel(constraints),
                     SizedBox(height: AppDimensions.spaceL),
-                    _buildSearchSection(),
+                    _buildSearchSection(context),
                     SizedBox(height: AppDimensions.spaceL),
                     _buildRecentDestinations(),
                   ],
@@ -174,9 +174,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchSection() {
+  Widget _buildSearchSection(BuildContext context) {
     return WomiCard(
       padding: EdgeInsets.all(AppDimensions.spaceM),
+      onTap: () => Navigator.pushNamed(context, AppRoutes.destinationSelection),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
