@@ -26,6 +26,10 @@ migrate_working_dir/
 *.hive
 *.lock
 
+# Agent / skills (local only)
+.agents/
+skills-lock.json
+
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
