@@ -134,7 +134,7 @@ class _ActiveRideScreenState extends State<ActiveRideScreen>
     return Scaffold(
       body: Stack(
         children: [
-          _buildMap(),
+          Positioned.fill(child: _buildMap()),
           Positioned(
             top: AppDimensions.spaceXL + MediaQuery.of(context).padding.top,
             left: 0,
@@ -178,7 +178,7 @@ class _ActiveRideScreenState extends State<ActiveRideScreen>
       ),
       children: [
         TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.womi.app',
         ),
         _buildStaticRoute(),

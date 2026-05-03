@@ -136,7 +136,7 @@ class _DestinationSelectionScreenState
     return Scaffold(
       body: Stack(
         children: [
-          _buildMap(),
+          Positioned.fill(child: _buildMap()),
           _buildBackButton(),
           _buildDestinationCard(),
         ],
@@ -156,7 +156,7 @@ class _DestinationSelectionScreenState
       ),
       children: [
         TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.womi.app',
         ),
         if (_selected != null) _buildAnimatedRoute(),
