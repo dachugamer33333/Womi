@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../shared/widgets/widgets.dart';
@@ -16,10 +15,9 @@ class DestinationSelectionScreen extends StatefulWidget {
 }
 
 class _DestinationSelectionScreenState
-    extends State<DestinationSelectionScreen> with TickerProviderStateMixin {
+    extends State<DestinationSelectionScreen> {
   DestinationModel? _selected;
   bool _showConfirm = false;
-  late final AnimationController _polylineCtrl;
   final MapController _mapCtrl = MapController();
   final _destinations = DestinationModel.cdmxDestinations();
   static const _origin = DestinationModel.simulatedOrigin;
@@ -27,15 +25,10 @@ class _DestinationSelectionScreenState
   @override
   void initState() {
     super.initState();
-    _polylineCtrl = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
   }
 
   @override
   void dispose() {
-    _polylineCtrl.dispose();
     _mapCtrl.dispose();
     super.dispose();
   }
@@ -45,7 +38,6 @@ class _DestinationSelectionScreenState
       _selected = dest;
       _showConfirm = true;
     });
-    _polylineCtrl.forward(from: 0);
     final bounds = LatLngBounds.fromPoints([_origin, dest.location]);
     _mapCtrl.fitCamera(
       CameraFit.bounds(
@@ -166,107 +158,43 @@ class _DestinationSelectionScreenState
   }
 
   Widget _buildAnimatedRoute() {
-    return AnimatedBuilder(
-      animation: _polylineCtrl,
-      builder: (context, _) {
-        final progress = _polylineCtrl.value;
-        final curvedPoints = _generateCurvedPoints(progress);
-        return Stack(
-          children: [
-            Positioned.fill(
-              child: PolylineLayer(
-                polylines: [
-                  Polyline(
-                    points: curvedPoints,
-                    strokeWidth: 4,
-                    color: AppColors.secondary.withValues(alpha: 0.7),
-                  ),
-                ],
-              ),
+    final dest = _selected!.location;
+    return Stack(
+      children: [
+        PolylineLayer(
+          polylines: [
+            Polyline(
+              points: [_origin, dest],
+              strokeWidth: 5,
+              color: AppColors.secondary.withValues(alpha: 0.7),
             ),
-            Positioned.fill(
-              child: MarkerLayer(
-                markers: [
-                  Marker(
-                    point: _origin,
-                    width: 40,
-                    height: 40,
-                    child: _buildMarkerPin(AppColors.success, 'Origen'),
-                  ),
-                  if (_selected != null)
-                    Marker(
-                      point: curvedPoints.last,
-                      width: 40,
-                      height: 40,
-                      child: _buildMarkerPin(
-                        AppColors.accent,
-                        _selected!.name,
-                      ),
-                    ),
-                ],
+          ],
+        ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              point: _origin,
+              width: 32,
+              height: 32,
+              child: _buildMarkerPin(AppColors.success, 'Origen'),
+            ),
+            Marker(
+              point: dest,
+              width: 32,
+              height: 32,
+              child: _buildMarkerPin(
+                AppColors.accent,
+                _selected!.name,
               ),
             ),
           ],
-        );
-      },
+        ),
+      ],
     );
-  }
-
-  List<LatLng> _generateCurvedPoints(double progress) {
-    final targetCount = (20 * progress).ceil().clamp(2, 20);
-    final points = <LatLng>[];
-    final dest = _selected!.location;
-    final curveOffset = (dest.longitude - _origin.longitude) * 0.15;
-    final midLat = _origin.latitude + (dest.latitude - _origin.latitude) * 0.5;
-
-    for (int i = 0; i < targetCount; i++) {
-      final t = i / (targetCount - 1);
-      final curvedT = _quadraticBezier(t);
-      final lat = _origin.latitude + (dest.latitude - _origin.latitude) * t;
-      final lng =
-          _origin.longitude + (dest.longitude - _origin.longitude) * t;
-      final curvedLat = midLat + (lat - midLat) * curvedT;
-      double curvedLng;
-      if (t < 0.5) {
-        curvedLng = lng + curveOffset * (1 - curvedT * 2);
-      } else {
-        curvedLng = lng - curveOffset * (1 - (1 - curvedT) * 2);
-      }
-      points.add(LatLng(curvedLat, curvedLng));
-    }
-    return points;
-  }
-
-  double _quadraticBezier(double t) {
-    return 2 * (1 - t) * t;
   }
 
   Widget _buildMarkerPin(Color color, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.spaceXS,
-            vertical: AppDimensions.spaceXS / 2,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-            boxShadow: AppShadows.card,
-          ),
-          child: Text(
-            label,
-            style: AppTextStyles.labelSmall.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        SizedBox(height: AppDimensions.spaceXS),
-        Icon(Icons.location_on_rounded, color: color, size: 20),
-      ],
-    );
+    return Icon(Icons.location_on_rounded, color: color, size: 32);
   }
 
   Widget _buildBackButton() {
@@ -291,45 +219,58 @@ class _DestinationSelectionScreenState
   }
 
   Widget _buildDestinationCard() {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final maxCardHeight = MediaQuery.of(context).size.height * 0.5;
     return Positioned(
-      bottom: 0,
+      bottom: bottomPadding,
       left: 0,
       right: 0,
       child: AnimatedContainer(
         duration: AppDurations.normal,
+        constraints: BoxConstraints(maxHeight: maxCardHeight),
         padding: EdgeInsets.all(AppDimensions.spaceM),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (!_showConfirm) ...[
-              Container(
-                padding: EdgeInsets.all(AppDimensions.spaceM),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(AppDimensions.radiusL),
-                  ),
-                  boxShadow: AppShadows.medium,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: AppColors.textBody.withValues(alpha: 0.2),
-                        borderRadius:
-                            BorderRadius.circular(AppDimensions.radiusPill),
-                      ),
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(AppDimensions.spaceM),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(AppDimensions.radiusL),
                     ),
-                    SizedBox(height: AppDimensions.spaceM),
-                    Text('¿A dónde vamos?',
-                        style: AppTextStyles.headline),
-                    SizedBox(height: AppDimensions.spaceM),
-                    ..._destinations.map((dest) => _buildDestItem(dest)),
-                  ],
+                    boxShadow: AppShadows.medium,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: AppColors.textBody.withValues(alpha: 0.2),
+                          borderRadius:
+                              BorderRadius.circular(AppDimensions.radiusPill),
+                        ),
+                      ),
+                      SizedBox(height: AppDimensions.spaceM),
+                      Text('¿A dónde vamos?',
+                          style: AppTextStyles.headline),
+                      SizedBox(height: AppDimensions.spaceM),
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: _destinations
+                                .map((dest) => _buildDestItem(dest))
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -344,6 +285,7 @@ class _DestinationSelectionScreenState
                   boxShadow: AppShadows.medium,
                 ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
                       width: 40,

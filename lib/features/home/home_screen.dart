@@ -175,47 +175,53 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildSearchSection(BuildContext context) {
-    return WomiCard(
-      padding: EdgeInsets.all(AppDimensions.spaceM),
+    return GestureDetector(
       onTap: () => Navigator.pushNamed(context, AppRoutes.destinationSelection),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.shield_rounded,
-                  color: AppColors.accent, size: AppDimensions.iconM),
-              SizedBox(width: AppDimensions.spaceS),
-              Text(
-                'Viaje seguro',
-                style: AppTextStyles.titleSmall
-                    .copyWith(color: AppColors.secondary),
-              ),
-            ],
-          ),
-          SizedBox(height: AppDimensions.spaceM),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppDimensions.radiusPill),
-              boxShadow: AppShadows.card,
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: AppStrings.searchPlaceholder,
-                hintStyle: AppTextStyles.bodyMedium
-                    .copyWith(color: AppColors.textBody.withValues(alpha: 0.5)),
-                prefixIcon: Icon(Icons.search_rounded,
+      child: WomiCard(
+        padding: EdgeInsets.all(AppDimensions.spaceM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.shield_rounded,
                     color: AppColors.accent, size: AppDimensions.iconM),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.spaceL,
-                  vertical: AppDimensions.spaceM,
+                SizedBox(width: AppDimensions.spaceS),
+                Text(
+                  'Viaje seguro',
+                  style: AppTextStyles.titleSmall
+                      .copyWith(color: AppColors.secondary),
                 ),
+              ],
+            ),
+            SizedBox(height: AppDimensions.spaceM),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.spaceL,
+                vertical: AppDimensions.spaceM + 2,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusPill),
+                boxShadow: AppShadows.card,
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.search_rounded,
+                      color: AppColors.accent, size: AppDimensions.iconM),
+                  SizedBox(width: AppDimensions.spaceS),
+                  Text(
+                    AppStrings.searchPlaceholder,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textBody.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -67,6 +67,16 @@ class _ActiveRideScreenState extends State<ActiveRideScreen>
     });
   }
 
+  void _centerRoute() {
+    final bounds = LatLngBounds.fromPoints([_origin, _destination]);
+    _mapCtrl.fitCamera(
+      CameraFit.bounds(
+        bounds: bounds,
+        padding: EdgeInsets.all(AppDimensions.spaceXL),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _carCtrl.dispose();
@@ -137,6 +147,24 @@ class _ActiveRideScreenState extends State<ActiveRideScreen>
           Positioned.fill(child: _buildMap()),
           Positioned(
             top: AppDimensions.spaceXL + MediaQuery.of(context).padding.top,
+            right: AppDimensions.spaceM,
+            child: GestureDetector(
+              onTap: _centerRoute,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  shape: BoxShape.circle,
+                  boxShadow: AppShadows.soft,
+                ),
+                child: Icon(Icons.my_location_rounded,
+                    color: AppColors.secondary, size: AppDimensions.iconM),
+              ),
+            ),
+          ),
+          Positioned(
+            top: AppDimensions.spaceXL + MediaQuery.of(context).padding.top,
             left: 0,
             right: 0,
             child: Center(
@@ -174,7 +202,7 @@ class _ActiveRideScreenState extends State<ActiveRideScreen>
         initialZoom: 12.5,
         backgroundColor: AppColors.lavenderLight,
         interactionOptions: const InteractionOptions(
-          flags: InteractiveFlag.none,
+          flags: InteractiveFlag.all ^ InteractiveFlag.rotate,
         ),
       ),
       children: [
@@ -234,43 +262,16 @@ class _ActiveRideScreenState extends State<ActiveRideScreen>
       markers: [
         Marker(
           point: _origin,
-          width: 40,
-          height: 40,
-          child: _buildMapMarker(AppColors.success, 'Origen'),
+          width: 32,
+          height: 32,
+          child: Icon(Icons.location_on_rounded, color: AppColors.success, size: 32),
         ),
         Marker(
           point: _destination,
-          width: 40,
-          height: 40,
-          child: _buildMapMarker(AppColors.accent, 'Destino'),
+          width: 32,
+          height: 32,
+          child: Icon(Icons.location_on_rounded, color: AppColors.accent, size: 32),
         ),
-      ],
-    );
-  }
-
-  Widget _buildMapMarker(Color color, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.spaceXS,
-            vertical: 1,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-            boxShadow: AppShadows.card,
-          ),
-          child: Text(label,
-              style: AppTextStyles.labelSmall.copyWith(
-                color: color,
-                fontWeight: FontWeight.w600,
-                fontSize: 10,
-              )),
-        ),
-        SizedBox(height: AppDimensions.spaceXS),
-        Icon(Icons.location_on_rounded, color: color, size: 20),
       ],
     );
   }
