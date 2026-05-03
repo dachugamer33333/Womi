@@ -24,20 +24,8 @@ class SettingsScreen extends StatelessWidget {
           _buildOption(
             icon: Icons.edit_rounded,
             title: 'Editar perfil',
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Próximamente',
-                      style: AppTextStyles.bodyMedium
-                          .copyWith(color: AppColors.surface)),
-                  backgroundColor: AppColors.secondary,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-                  ),
-                ),
-              );
-            },
+            onTap: () =>
+                Navigator.pushNamed(context, AppRoutes.editProfile),
           ),
           _buildSwitchOption(
             icon: Icons.notifications_rounded,

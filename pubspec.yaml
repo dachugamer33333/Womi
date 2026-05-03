@@ -47,6 +47,12 @@ dependencies:
   # Maps (simulated, no GPS required)
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
+  # HTTP & geocoding
+  http: ^1.2.1
+  # Camera & images
+  image_picker: ^1.1.2
+  path_provider: ^2.1.5
+  camera: ^0.11.1
 
 dev_dependencies:
   flutter_test:

@@ -176,7 +176,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildSearchSection(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, AppRoutes.destinationSelection),
+      onTap: () => Navigator.pushNamed(context, AppRoutes.destinationSearch),
       child: WomiCard(
         padding: EdgeInsets.all(AppDimensions.spaceM),
         child: Column(

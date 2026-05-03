@@ -108,6 +108,20 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              if (!isVerified) ...[
+                SizedBox(height: AppDimensions.spaceM),
+                SizedBox(
+                  width: 220,
+                  child: WomiGradientButton(
+                    label: 'Verificar mi cuenta',
+                    icon: Icons.shield_rounded,
+                    fontSize: 13,
+                    height: 40,
+                    onPressed: () => Navigator.pushNamed(
+                        context, AppRoutes.verificationIntro),
+                  ),
+                ),
+              ],
             ],
           ),
         );

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../domain/models/destination_model.dart';
 import '../../domain/models/ride_model.dart';
+import '../../../map/domain/models/place_result.dart';
 
 class DestinationSelectionScreen extends StatefulWidget {
   const DestinationSelectionScreen({super.key});
@@ -25,6 +27,17 @@ class _DestinationSelectionScreenState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is PlaceResult) {
+        final dest = DestinationModel(
+          name: args.displayName.split(',').first,
+          address: args.displayName,
+          location: LatLng(args.latitude, args.longitude),
+        );
+        _selectDestination(dest);
+      }
+    });
   }
 
   @override

@@ -9,6 +9,7 @@ class UserModel {
   final double walletBalance;
   final int couponsCount;
   final int cardsCount;
+  final String? photoPath;
 
   const UserModel({
     required this.id,
@@ -21,6 +22,7 @@ class UserModel {
     this.walletBalance = 0.0,
     this.couponsCount = 0,
     this.cardsCount = 0,
+    this.photoPath,
   });
 
   UserModel copyWith({
@@ -34,6 +36,7 @@ class UserModel {
     double? walletBalance,
     int? couponsCount,
     int? cardsCount,
+    String? photoPath,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -46,6 +49,7 @@ class UserModel {
       walletBalance: walletBalance ?? this.walletBalance,
       couponsCount: couponsCount ?? this.couponsCount,
       cardsCount: cardsCount ?? this.cardsCount,
+      photoPath: photoPath ?? this.photoPath,
     );
   }
 
@@ -61,6 +65,7 @@ class UserModel {
       'walletBalance': walletBalance,
       'couponsCount': couponsCount,
       'cardsCount': cardsCount,
+      'photoPath': photoPath,
     };
   }
 
@@ -76,6 +81,7 @@ class UserModel {
       walletBalance: (json['walletBalance'] as num?)?.toDouble() ?? 0.0,
       couponsCount: json['couponsCount'] as int? ?? 0,
       cardsCount: json['cardsCount'] as int? ?? 0,
+      photoPath: json['photoPath'] as String?,
     );
   }
 }

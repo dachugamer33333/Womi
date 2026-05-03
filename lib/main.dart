@@ -22,6 +22,14 @@ import 'features/ride/presentation/screens/destination_selection_screen.dart';
 import 'features/ride/presentation/screens/searching_driver_screen.dart';
 import 'features/ride/presentation/screens/active_ride_screen.dart';
 import 'features/ride/presentation/screens/ride_completed_screen.dart';
+import 'features/map/presentation/screens/destination_search_screen.dart';
+import 'features/wallet/presentation/screens/add_payment_method_screen.dart';
+import 'features/profile/presentation/screens/edit_profile_screen.dart';
+import 'features/profile/presentation/screens/change_password_screen.dart';
+import 'features/verification/presentation/screens/verification_intro_screen.dart';
+import 'features/verification/presentation/screens/ine_capture_screen.dart';
+import 'features/verification/presentation/screens/selfie_capture_screen.dart';
+import 'features/verification/presentation/screens/verification_processing_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,6 +73,8 @@ class WomiApp extends StatelessWidget {
           AppRoutes.profile: (_) => const ProfileScreen(),
           AppRoutes.destinationSelection: (_) =>
               const DestinationSelectionScreen(),
+          AppRoutes.destinationSearch: (_) =>
+              const DestinationSearchScreen(),
           AppRoutes.searchingDriver: (_) => const SearchingDriverScreen(),
           AppRoutes.activeRide: (_) => const ActiveRideScreen(),
           AppRoutes.rideCompleted: (_) => const RideCompletedScreen(),
@@ -72,6 +82,18 @@ class WomiApp extends StatelessWidget {
           AppRoutes.help: (_) => const HelpScreen(),
           AppRoutes.securitySettings: (_) => const SecurityScreen(),
           AppRoutes.settings: (_) => const SettingsScreen(),
+          AppRoutes.addPayment: (_) =>
+              const AddPaymentMethodScreen(),
+          AppRoutes.editProfile: (_) => const EditProfileScreen(),
+          AppRoutes.changePassword: (_) =>
+              const ChangePasswordScreen(),
+          AppRoutes.verificationIntro: (_) =>
+              const VerificationIntroScreen(),
+          AppRoutes.ineCapture: (_) => const IneCaptureScreen(),
+          AppRoutes.selfieCapture: (_) =>
+              const SelfieCaptureScreen(),
+          AppRoutes.verificationProcessing: (_) =>
+              const VerificationProcessingScreen(),
         },
       ),
     );
