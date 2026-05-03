@@ -1,32 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'core/theme/theme.dart';
 import 'core/router/app_routes.dart';
 import 'shared/widgets/widgets.dart';
+import 'features/auth/data/local_storage_service.dart';
+import 'features/auth/data/auth_repository.dart';
+import 'features/auth/presentation/providers/auth_provider.dart';
+import 'features/auth/presentation/screens/splash_screen.dart';
+import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/auth/presentation/screens/register_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/activity/activity_screen.dart';
 import 'features/wallet/wallet_screen.dart';
 import 'features/profile/profile_screen.dart';
 
-void main() {
-  runApp(const WomiApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final storage = LocalStorageService();
+  await storage.init();
+
+  final authRepo = AuthRepository(storage);
+
+  runApp(WomiApp(authRepo: authRepo));
 }
 
 class WomiApp extends StatelessWidget {
-  const WomiApp({super.key});
+  final AuthRepository authRepo;
+
+  const WomiApp({super.key, required this.authRepo});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Womi',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      initialRoute: AppRoutes.home,
-      routes: {
-        AppRoutes.home: (_) => const AppShell(),
-        AppRoutes.activity: (_) => const ActivityScreen(),
-        AppRoutes.wallet: (_) => const WalletScreen(),
-        AppRoutes.profile: (_) => const ProfileScreen(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(authRepo),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Womi',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        initialRoute: AppRoutes.splash,
+        routes: {
+          AppRoutes.splash: (_) => const SplashScreen(),
+          AppRoutes.login: (_) => const LoginScreen(),
+          AppRoutes.register: (_) => const RegisterScreen(),
+          AppRoutes.home: (_) => const AppShell(),
+          AppRoutes.activity: (_) => const ActivityScreen(),
+          AppRoutes.wallet: (_) => const WalletScreen(),
+          AppRoutes.profile: (_) => const ProfileScreen(),
+        },
+      ),
     );
   }
 }

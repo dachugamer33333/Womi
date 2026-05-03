@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/theme/theme.dart';
 import '../../core/router/app_routes.dart';
 import '../../core/constants/app_strings.dart';
 import '../../shared/widgets/widgets.dart';
+import '../auth/presentation/providers/auth_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -41,6 +43,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+    final firstName = auth.currentUser?.fullName.split(' ').first ?? '';
     return Row(
       children: [
         Expanded(
@@ -56,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                         AppGradients.brand.createShader(bounds),
                     blendMode: BlendMode.srcIn,
                     child: Text(
-                      'María!',
+                      '$firstName!',
                       style: AppTextStyles.displayMedium
                           .copyWith(color: Colors.white),
                     ),
@@ -71,12 +75,24 @@ class HomeScreen extends StatelessWidget {
           child: CircleAvatar(
             radius: 24,
             backgroundColor: AppColors.lavenderLight,
-            child: Icon(Icons.person_rounded,
-                color: AppColors.secondary, size: AppDimensions.iconL),
+            child: Text(
+              _getInitials(auth.currentUser?.fullName ?? ''),
+              style: AppTextStyles.titleSmall.copyWith(
+                color: AppColors.secondary,
+              ),
+            ),
           ),
         ),
       ],
     );
+  }
+
+  String _getInitials(String fullName) {
+    final parts = fullName.trim().split(RegExp(r'\s+'));
+    if (parts.isEmpty) return '?';
+    return parts.length > 1
+        ? '${parts.first[0]}${parts.last[0]}'.toUpperCase()
+        : parts.first[0].toUpperCase();
   }
 
   Widget _buildBannerCarousel(BoxConstraints constraints) {
@@ -204,45 +220,79 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildRecentDestinations() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppStrings.recentDestinations,
-          style: AppTextStyles.titleMedium,
-        ),
-        SizedBox(height: AppDimensions.spaceM),
-        ...List.generate(
-          3,
-          (index) => Padding(
-            padding: EdgeInsets.only(bottom: AppDimensions.spaceS),
-            child: ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: AppColors.lavenderLight,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-                ),
-                child: Icon(Icons.history_rounded,
-                    color: AppColors.secondary, size: AppDimensions.iconM),
-              ),
-              title: Text(
-                ['Casa', 'Trabajo', 'Gimnasio'][index],
-                style: AppTextStyles.bodyMedium,
-              ),
-              subtitle: Text(
-                ['Av. Principal 123', 'Calle del Sol 456', 'Av. Deportiva 789']
-                    [index],
-                style: AppTextStyles.labelSmall,
-              ),
-              trailing: Icon(Icons.chevron_right_rounded,
-                  color: AppColors.textBody, size: AppDimensions.iconM),
-              contentPadding: EdgeInsets.zero,
+    return Consumer<AuthProvider>(
+      builder: (context, auth, _) {
+        final destinations = auth.repository.getRecentDestinations();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppStrings.recentDestinations,
+              style: AppTextStyles.titleMedium,
             ),
+            SizedBox(height: AppDimensions.spaceM),
+            if (destinations.isEmpty)
+              _buildEmptyDestinations()
+            else
+              ...destinations.map((dest) => Padding(
+                    padding: EdgeInsets.only(bottom: AppDimensions.spaceS),
+                    child: ListTile(
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.lavenderLight,
+                          borderRadius:
+                              BorderRadius.circular(AppDimensions.radiusS),
+                        ),
+                        child: Icon(Icons.history_rounded,
+                            color: AppColors.secondary,
+                            size: AppDimensions.iconM),
+                      ),
+                      title: Text(
+                        dest['name'] as String? ?? '',
+                        style: AppTextStyles.bodyMedium,
+                      ),
+                      subtitle: Text(
+                        dest['address'] as String? ?? '',
+                        style: AppTextStyles.labelSmall,
+                      ),
+                      trailing: Icon(Icons.chevron_right_rounded,
+                          color: AppColors.textBody,
+                          size: AppDimensions.iconM),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  )),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyDestinations() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(AppDimensions.spaceXL),
+      decoration: BoxDecoration(
+        color: AppColors.lavenderLight,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.explore_outlined,
+              color: AppColors.secondary.withValues(alpha: 0.4),
+              size: AppDimensions.iconXL),
+          SizedBox(height: AppDimensions.spaceM),
+          Text(
+            'Aún no tienes destinos guardados.\n¡Empieza tu primer viaje!',
+            style: AppTextStyles.bodySmall.copyWith(
+              color: AppColors.textBody.withValues(alpha: 0.6),
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
